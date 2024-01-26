@@ -1,20 +1,38 @@
 #!/usr/bin/python3
-from sys import argv
+import sys
 
-with open(argv[1]) as f:
-    for line in f:
-        num = int(line)
-        print("{:d}=".format(num), end='')
-        
-        if num % 2 == 0:
-            print("{}*2".format(num//2))
-            continue  #
-          
-        for i in range(3, num, 2):
-            if num % i == 0:
-                factor = num // i
-                for j in range(3, factor, 2):
-                    if factor % j == 0 or j == 0:
-                        break
-                print("{}*{}".format(factor, i))
+def factorize_number(n):
+    """
+    Function to factorize a number into a product of two smaller numbers.
+    """
+    if n % 2 == 0:
+        print("{}={}*{}".format(n, n // 2, 2))
+    else:
+        i = 3
+        while i <= n // 2:
+            if n % i == 0:
+                print("{}={}*{}".format(n, n // i, i))
                 break
+            i += 2
+        else:  # Executed when the while loop completes without hitting the 'break' statement
+            print("{}={}*{}".format(n, n, 1))
+
+def factorize_file(file_path):
+    """
+    Function to factorize numbers from a file.
+    """
+    try:
+        with open(file_path) as f:
+            for line in f:
+                number = int(line)
+                factorize_number(number)
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
+    except ValueError:
+        print("Invalid input. Please ensure all lines contain valid natural numbers.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: {} <file>".format(sys.argv[0]))
+    else:
+        factorize_file(sys.argv[1])
